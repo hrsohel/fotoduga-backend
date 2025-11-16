@@ -46,6 +46,10 @@ const GiftType = Object.freeze({
 exports.GiftType = GiftType;
 // Main schema for a customizable gift project
 const GiftProjectSchema = new mongoose_1.Schema({
+    name: { type: String, default: null },
+    description: { type: String, default: null },
+    price: { type: Number, default: null },
+    templateImage: { type: String },
     userId: {
         type: mongoose_1.Schema.Types.ObjectId,
         ref: 'User',
@@ -60,18 +64,22 @@ const GiftProjectSchema = new mongoose_1.Schema({
         enum: Object.values(GiftType),
         required: true
     },
-    customization: {
-        // The primary user-provided image, stored as a Base64 string.
-        image: {
-            type: String,
-            default: null
-        }
-        // You could extend this object with more properties later,
-        // e.g., text overlays, colors, etc.
-        // text: { type: String },
-        // font: { type: String },
-        // color: { type: String },
-        // position: { x: Number, y: Number }
+    // customization: {
+    //   // The primary user-provided image, stored as a Base64 string.
+    //   image: {
+    //     type: String,
+    //     default: null
+    //   }
+    //   // You could extend this object with more properties later,
+    //   // e.g., text overlays, colors, etc.
+    //   // text: { type: String },
+    //   // font: { type: String },
+    //   // color: { type: String },
+    //   // position: { x: Number, y: Number }
+    // }
+    image: {
+        type: String,
+        default: null
     }
 }, {
     timestamps: true // Automatically adds createdAt and updatedAt fields

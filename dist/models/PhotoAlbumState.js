@@ -97,8 +97,8 @@ const GridPositionSchema = new mongoose_1.Schema({
 }, { _id: false });
 // Main schema for the entire photo album project state
 const PhotoAlbumStateSchema = new mongoose_1.Schema({
-    userId: { type: mongoose_1.Schema.Types.ObjectId, ref: "User", required: true },
-    projectId: { type: String, required: true, unique: true },
+    userId: { type: mongoose_1.Schema.Types.ObjectId, ref: "User" },
+    projectId: { type: String, unique: true },
     placedImages: [PlacedImageSchema],
     gridCount: {
         left: { type: Number, default: 5 },

@@ -83,6 +83,8 @@ const CalendarPageSchema = new mongoose_1.Schema({
 // Main schema for a complete calendar project
 const CalendarProjectSchema = new mongoose_1.Schema({
     userId: { type: mongoose_1.Schema.Types.ObjectId, ref: 'User', required: true },
+    name: { type: String, default: null },
+    calendarType: { type: String, default: null },
     projectName: { type: String, required: true },
     year: { type: Number, required: true },
     pages: [CalendarPageSchema] // An array of 12 pages, one for each month

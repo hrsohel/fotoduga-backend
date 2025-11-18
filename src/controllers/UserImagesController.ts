@@ -7,7 +7,7 @@ class UserImagesController {
     try {
       const { userId } = req.params;
       const files = req.files as Express.Multer.File[];
-      const imagePaths = files.map(file => file.path);
+      const imagePaths = files.map(file => file.path.replace(/\\/g, '/'));
 
       const updatedUserImages = await UserImagesService.uploadImages(
         new Types.ObjectId(userId),
@@ -56,6 +56,7 @@ class UserImagesController {
         });
       }
     } catch (error) {
+      console.error(error)
       res.status(500).json({
         code: 500,
         message: 'Error deleting image',
@@ -67,11 +68,12 @@ class UserImagesController {
 
   public async getImagesByUser(req: Request, res: Response): Promise<void> {
     try {
+      console.log("user images")
       const { userId } = req.params;
+      console.log(userId)
       const images = await UserImagesService.getImagesByUser(
         new Types.ObjectId(userId)
       );
-
       if (images) {
         res.status(200).json({
           code: 200,

@@ -2,6 +2,8 @@ import { Router } from 'express';
 import UserImagesController from '../controllers/UserImagesController';
 import upload from '../middleware/upload';
 
+console.log('UserImagesRoutes.ts loaded');
+
 const router = Router();
 
 router.post(

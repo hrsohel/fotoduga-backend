@@ -20,7 +20,7 @@ class UserImagesController {
             try {
                 const { userId } = req.params;
                 const files = req.files;
-                const imagePaths = files.map(file => file.path);
+                const imagePaths = files.map(file => file.path.replace(/\\/g, '/'));
                 const updatedUserImages = yield UserImagesService_1.default.uploadImages(new mongoose_1.Types.ObjectId(userId), imagePaths);
                 res.status(200).json({
                     code: 200,
@@ -63,6 +63,7 @@ class UserImagesController {
                 }
             }
             catch (error) {
+                console.error(error);
                 res.status(500).json({
                     code: 500,
                     message: 'Error deleting image',
@@ -75,7 +76,9 @@ class UserImagesController {
     getImagesByUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
+                console.log("user images");
                 const { userId } = req.params;
+                console.log(userId);
                 const images = yield UserImagesService_1.default.getImagesByUser(new mongoose_1.Types.ObjectId(userId));
                 if (images) {
                     res.status(200).json({

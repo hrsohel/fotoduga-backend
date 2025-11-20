@@ -29,9 +29,11 @@ class PhotoAlbumTemplateController {
       const { pagesToAdd, pagesToDelete } = req.body;
       const files = req.files as Express.Multer.File[];
 
+      const parsedPagesToAdd = JSON.parse(pagesToAdd);
+
       const updatedTemplate = await PhotoAlbumTemplateService.updatePagesInTemplate(
         templateName,
-        pagesToAdd,
+        parsedPagesToAdd,
         files,
         pagesToDelete
       );
@@ -52,6 +54,7 @@ class PhotoAlbumTemplateController {
         });
       }
     } catch (error) {
+      console.error(error)
       res.status(500).json({
         code: 500,
         message: 'Error updating pages in template',
@@ -63,6 +66,7 @@ class PhotoAlbumTemplateController {
 
   public async getTemplatePages(req: Request, res: Response): Promise<void> {
     try {
+      console.log("hey")
       const { templateName } = req.params;
       const template = await PhotoAlbumTemplateService.getTemplatePages(templateName);
 
@@ -82,6 +86,7 @@ class PhotoAlbumTemplateController {
         });
       }
     } catch (error) {
+      console.error(error)
       res.status(500).json({
         code: 500,
         message: 'Error retrieving template pages',

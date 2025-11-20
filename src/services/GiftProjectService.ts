@@ -1,45 +1,22 @@
 import GiftProject, { IGiftProject } from '../models/GiftProject';
-import { Types } from 'mongoose';
 
-class GiftProjectService {
-  public async createProject(
-    userId: Types.ObjectId,
-    projectName: string,
-    giftType: 'T-shirt' | 'Cup' | 'Card' | 'MousePad',
-    name: string,
-    description: string,
-    price: number,
-    templateImage: string,
-    image: string
-  ): Promise<IGiftProject> {
-    const newProject = new GiftProject({
-      userId,
-      projectName,
-      giftType,
-      name,
-      description,
-      price,
-      templateImage,
-      image,
-    });
-    await newProject.save();
-    return newProject;
-  }
+export const createGiftProject = async (data: Partial<IGiftProject>): Promise<IGiftProject> => {
+  const newProject = new GiftProject(data);
+  return await newProject.save();
+};
 
-  public async updateProject(
-    projectId: string,
-    updateData: Partial<IGiftProject>
-  ): Promise<IGiftProject | null> {
-    return GiftProject.findByIdAndUpdate(projectId, updateData, { new: true });
-  }
+export const getGiftProjects = async (): Promise<IGiftProject[]> => {
+  return await GiftProject.find();
+};
 
-  public async getProjectById(projectId: string): Promise<IGiftProject | null> {
-    return GiftProject.findById(projectId);
-  }
+export const getGiftProjectById = async (id: string): Promise<IGiftProject | null> => {
+  return await GiftProject.findById(id);
+};
 
-  public async getProjectsByUser(userId: string): Promise<IGiftProject[]> {
-    return GiftProject.find({ userId: new Types.ObjectId(userId) });
-  }
-}
+export const updateGiftProject = async (id: string, data: Partial<IGiftProject>): Promise<IGiftProject | null> => {
+  return await GiftProject.findByIdAndUpdate(id, data, { new: true });
+};
 
-export default new GiftProjectService();
+export const deleteGiftProject = async (id: string): Promise<IGiftProject | null> => {
+  return await GiftProject.findByIdAndDelete(id);
+};

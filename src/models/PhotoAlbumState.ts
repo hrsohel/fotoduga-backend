@@ -47,6 +47,8 @@ interface IPlacedImage extends Document {
   gridArea?: string;
   mask?: string;
   frameUrl?: string;
+  texts: IText[];
+  stickers: ISticker[];
 }
 
 interface IGridPosition extends Document {
@@ -75,7 +77,7 @@ export interface IPhotoAlbumState extends Document {
   layoutModelLeft: number;
   layoutModelRight: number;
   bgType: string;
-  selectBg: string;
+  selectedBg: string;
   leftBg: string | null;
   rightBg: string | null;
   leftBgType: string;
@@ -143,7 +145,9 @@ const PlacedImageSchema = new Schema<IPlacedImage>({
   partition: { type: String, enum: ["left", "right", "debug"], required: true },
   gridArea: { type: String },
   mask: { type: String, default: null },
-  frameUrl: { type: String, default: null }
+  frameUrl: { type: String, default: null },
+  texts: [TextSchema],
+  stickers: [StickerSchema]
 }, { _id: false });
 
 // Schema for the individual grid cells/positions
@@ -173,7 +177,7 @@ const PhotoAlbumStateSchema = new Schema<IPhotoAlbumState>({
   layoutModelLeft: { type: Number, default: 0 },
   layoutModelRight: { type: Number, default: 0 },
   bgType: { type: String, default: "plain" },
-  selectBg: { type: String, default: "#D81B60" },
+  selectedBg: { type: String, default: "#D81B60" },
   leftBg: { type: String, default: null },
   rightBg: { type: String, default: null },
   leftBgType: { type: String, default: "plain" },

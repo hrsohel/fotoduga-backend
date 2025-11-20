@@ -16,7 +16,7 @@ const PhotoAlbumPageSchema = new Schema({
 });
 
 const PhotoAlbumTemplateSchema = new Schema({
-  name: { type: String, required: true, unique: true },
+  name: { type: String, required: true },
   category: {type: String},
   pageType: {type: String},
   pages: [{type: Schema.Types.ObjectId, ref: "PhotoAlbumState"}],

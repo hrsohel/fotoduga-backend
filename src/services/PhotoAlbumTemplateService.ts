@@ -31,9 +31,20 @@ class PhotoAlbumTemplateService {
             }
           }
         }
-        const newPage = new PhotoAlbumState(pageData);
-        await newPage.save();
-        newPageIds.push(newPage._id as any);
+        
+        let savedPage;
+        if (pageData.projectId) {
+          savedPage = await PhotoAlbumState.findOneAndUpdate(
+            { projectId: pageData.projectId },
+            pageData,
+            { new: true, upsert: true }
+          );
+        } else {
+          const newPage = new PhotoAlbumState(pageData);
+          savedPage = await newPage.save();
+        }
+        
+        newPageIds.push(savedPage._id as any);
       }
     }
 

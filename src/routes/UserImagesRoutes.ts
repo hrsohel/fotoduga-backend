@@ -1,17 +1,17 @@
 import { Router } from 'express';
-import UserImagesController from '../controllers/UserImagesController';
+import * as UserImagesController from '../controllers/UserImagesController';
+import { authMiddleware } from '../middleware/auth';
 import upload from '../middleware/upload';
-
-console.log('UserImagesRoutes.ts loaded');
 
 const router = Router();
 
 router.post(
-  '/users/:userId/images',
+  '/images',
+  authMiddleware,
   upload.array('images'),
   UserImagesController.uploadImages
 );
-router.delete('/users/:userId/images', UserImagesController.deleteImage);
-router.get('/users/:userId/images', UserImagesController.getImagesByUser);
+router.delete('/images', authMiddleware, UserImagesController.deleteImage);
+router.get('/images', authMiddleware, UserImagesController.getImagesByUser);
 
 export default router;

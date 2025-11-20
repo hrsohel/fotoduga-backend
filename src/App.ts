@@ -4,11 +4,13 @@ import calendarProjectRoutes from './routes/CalendarProjectRoutes';
 import giftProjectRoutes from './routes/GiftProjectRoutes';
 import photoAlbumStateRoutes from './routes/PhotoAlbumStateRoutes';
 import userImagesRoutes from './routes/UserImagesRoutes';
+import userRoutes from './routes/UserRoutes';
 import cors from "cors"
 import upload from './middleware/upload';
 
 class App {
     public app: Application;
+
 
     constructor() {
         this.app = express();
@@ -53,9 +55,10 @@ class App {
         });
         this.app.use('/api', userImagesRoutes);
         this.app.use('/api', photoAlbumTemplateRoutes);
-        this.app.use('/api/calendars', calendarProjectRoutes);
-        this.app.use('/api/gifts', giftProjectRoutes);
-        this.app.use('/api/photo-album', photoAlbumStateRoutes);
+        this.app.use('/api', calendarProjectRoutes);
+        this.app.use('/api', giftProjectRoutes);
+        this.app.use('/api', photoAlbumStateRoutes);
+        this.app.use('/api/users', userRoutes);
     }
 }
 

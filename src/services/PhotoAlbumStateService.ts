@@ -1,27 +1,22 @@
 import PhotoAlbumState, { IPhotoAlbumState } from '../models/PhotoAlbumState';
-import { Types } from 'mongoose';
 
-class PhotoAlbumStateService {
-  public async createState(
-    stateData: Partial<IPhotoAlbumState>,
-    files: Express.Multer.File[]
-  ): Promise<IPhotoAlbumState> {
-    if (files && files.length > 0) {
-      let fileIndex = 0;
-      if (stateData.placedImages) {
-        for (let i = 0; i < stateData.placedImages.length; i++) {
-          if (fileIndex < files.length) {
-            stateData.placedImages[i].src = files[fileIndex].path;
-            fileIndex++;
-          }
-        }
-      }
-    }
+export const createPhotoAlbumState = async (data: Partial<IPhotoAlbumState>): Promise<IPhotoAlbumState> => {
+  const newState = new PhotoAlbumState(data);
+  return await newState.save();
+};
 
-    const newState = new PhotoAlbumState(stateData);
-    await newState.save();
-    return newState;
-  }
-}
+export const getPhotoAlbumStates = async (): Promise<IPhotoAlbumState[]> => {
+  return await PhotoAlbumState.find();
+};
 
-export default new PhotoAlbumStateService();
+export const getPhotoAlbumStateById = async (id: string): Promise<IPhotoAlbumState | null> => {
+  return await PhotoAlbumState.findById(id);
+};
+
+export const updatePhotoAlbumState = async (id: string, data: Partial<IPhotoAlbumState>): Promise<IPhotoAlbumState | null> => {
+  return await PhotoAlbumState.findByIdAndUpdate(id, data, { new: true });
+};
+
+export const deletePhotoAlbumState = async (id: string): Promise<IPhotoAlbumState | null> => {
+  return await PhotoAlbumState.findByIdAndDelete(id);
+};

@@ -1,4 +1,37 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -8,100 +41,66 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const CalendarProjectService_1 = __importDefault(require("../services/CalendarProjectService"));
-const mongoose_1 = require("mongoose");
-class CalendarProjectController {
-    createProject(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const { userId, projectName, year, name, calendarType } = req.body;
-                const newProject = yield CalendarProjectService_1.default.createProject(new mongoose_1.Types.ObjectId(userId), projectName, year, name, calendarType);
-                res.status(201).json({
-                    code: 201,
-                    message: 'Project created successfully',
-                    success: true,
-                    data: newProject,
-                });
-            }
-            catch (error) {
-                res.status(500).json({
-                    code: 500,
-                    message: 'Error creating project',
-                    success: false,
-                    data: [],
-                });
-            }
-        });
+exports.deleteCalendarProject = exports.updateCalendarProject = exports.getCalendarProjectById = exports.getCalendarProjects = exports.createCalendarProject = void 0;
+const CalendarProjectService = __importStar(require("../services/CalendarProjectService"));
+const createCalendarProject = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const project = yield CalendarProjectService.createCalendarProject(req.body);
+        res.status(201).json(project);
     }
-    addOrUpdatePage(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const { projectId } = req.params;
-                const page = req.body;
-                const updatedProject = yield CalendarProjectService_1.default.addOrUpdatePage(projectId, page);
-                if (updatedProject) {
-                    res.status(200).json({
-                        code: 200,
-                        message: 'Page updated successfully',
-                        success: true,
-                        data: updatedProject,
-                    });
-                }
-                else {
-                    res.status(404).json({
-                        code: 404,
-                        message: 'Project or page not found',
-                        success: false,
-                        data: [],
-                    });
-                }
-            }
-            catch (error) {
-                res.status(500).json({
-                    code: 500,
-                    message: 'Error updating page',
-                    success: false,
-                    data: [],
-                });
-            }
-        });
+    catch (error) {
+        res.status(500).json({ message: error.message });
     }
-    getProjectPages(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const { projectId } = req.params;
-                const pages = yield CalendarProjectService_1.default.getProjectPages(projectId);
-                if (pages) {
-                    res.status(200).json({
-                        code: 200,
-                        message: 'Pages retrieved successfully',
-                        success: true,
-                        data: pages,
-                    });
-                }
-                else {
-                    res.status(404).json({
-                        code: 404,
-                        message: 'Project not found',
-                        success: false,
-                        data: [],
-                    });
-                }
-            }
-            catch (error) {
-                res.status(500).json({
-                    code: 500,
-                    message: 'Error retrieving pages',
-                    success: false,
-                    data: [],
-                });
-            }
-        });
+});
+exports.createCalendarProject = createCalendarProject;
+const getCalendarProjects = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const projects = yield CalendarProjectService.getCalendarProjects();
+        res.status(200).json(projects);
     }
-}
-exports.default = new CalendarProjectController();
+    catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+exports.getCalendarProjects = getCalendarProjects;
+const getCalendarProjectById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const project = yield CalendarProjectService.getCalendarProjectById(req.params.id);
+        if (!project) {
+            return res.status(404).json({ message: 'Project not found' });
+        }
+        res.status(200).json(project);
+    }
+    catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+exports.getCalendarProjectById = getCalendarProjectById;
+const updateCalendarProject = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const project = yield CalendarProjectService.updateCalendarProject(req.params.id, req.body);
+        if (!project) {
+            return res.status(404).json({ message: 'Project not found' });
+        }
+        res.status(200).json(project);
+    }
+    catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+exports.updateCalendarProject = updateCalendarProject;
+const deleteCalendarProject = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const project = yield CalendarProjectService.deleteCalendarProject(req.params.id);
+        if (!project) {
+            return res.status(404).json({ message: 'Project not found' });
+        }
+        res.status(200).json({ message: 'Project deleted successfully' });
+    }
+    catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+exports.deleteCalendarProject = deleteCalendarProject;
 //# sourceMappingURL=CalendarProjectController.js.map

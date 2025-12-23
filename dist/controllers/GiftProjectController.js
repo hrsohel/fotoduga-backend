@@ -1,4 +1,37 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -8,132 +41,66 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const GiftProjectService_1 = __importDefault(require("../services/GiftProjectService"));
-const mongoose_1 = require("mongoose");
-class GiftProjectController {
-    createProject(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const { userId, projectName, giftType, name, description, price, } = req.body;
-                const files = req.files;
-                const image = files['image'] ? files['image'][0].path : '';
-                const templateImage = files['templateImage'] ? files['templateImage'][0].path : '';
-                const newProject = yield GiftProjectService_1.default.createProject(new mongoose_1.Types.ObjectId(userId), projectName, giftType, name, description, price, templateImage, image);
-                res.status(201).json({
-                    code: 201,
-                    message: 'Gift project created successfully',
-                    success: true,
-                    data: newProject,
-                });
-            }
-            catch (error) {
-                res.status(500).json({
-                    code: 500,
-                    message: 'Error creating gift project',
-                    success: false,
-                    data: [],
-                });
-            }
-        });
+exports.deleteGiftProject = exports.updateGiftProject = exports.getGiftProjectById = exports.getGiftProjects = exports.createGiftProject = void 0;
+const GiftProjectService = __importStar(require("../services/GiftProjectService"));
+const createGiftProject = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const project = yield GiftProjectService.createGiftProject(req.body);
+        res.status(201).json(project);
     }
-    updateProject(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const { projectId } = req.params;
-                const updateData = req.body;
-                const files = req.files;
-                if (files['image']) {
-                    updateData.image = files['image'][0].path;
-                }
-                if (files['templateImage']) {
-                    updateData.templateImage = files['templateImage'][0].path;
-                }
-                const updatedProject = yield GiftProjectService_1.default.updateProject(projectId, updateData);
-                if (updatedProject) {
-                    res.status(200).json({
-                        code: 200,
-                        message: 'Gift project updated successfully',
-                        success: true,
-                        data: updatedProject,
-                    });
-                }
-                else {
-                    res.status(404).json({
-                        code: 404,
-                        message: 'Gift project not found',
-                        success: false,
-                        data: [],
-                    });
-                }
-            }
-            catch (error) {
-                res.status(500).json({
-                    code: 500,
-                    message: 'Error updating gift project',
-                    success: false,
-                    data: [],
-                });
-            }
-        });
+    catch (error) {
+        res.status(500).json({ message: error.message });
     }
-    getProjectById(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const { projectId } = req.params;
-                const project = yield GiftProjectService_1.default.getProjectById(projectId);
-                if (project) {
-                    res.status(200).json({
-                        code: 200,
-                        message: 'Gift project retrieved successfully',
-                        success: true,
-                        data: project,
-                    });
-                }
-                else {
-                    res.status(404).json({
-                        code: 404,
-                        message: 'Gift project not found',
-                        success: false,
-                        data: [],
-                    });
-                }
-            }
-            catch (error) {
-                res.status(500).json({
-                    code: 500,
-                    message: 'Error retrieving gift project',
-                    success: false,
-                    data: [],
-                });
-            }
-        });
+});
+exports.createGiftProject = createGiftProject;
+const getGiftProjects = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const projects = yield GiftProjectService.getGiftProjects();
+        res.status(200).json(projects);
     }
-    getProjectsByUser(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const { userId } = req.params;
-                const projects = yield GiftProjectService_1.default.getProjectsByUser(userId);
-                res.status(200).json({
-                    code: 200,
-                    message: 'Gift projects retrieved successfully',
-                    success: true,
-                    data: projects,
-                });
-            }
-            catch (error) {
-                res.status(500).json({
-                    code: 500,
-                    message: 'Error retrieving gift projects',
-                    success: false,
-                    data: [],
-                });
-            }
-        });
+    catch (error) {
+        res.status(500).json({ message: error.message });
     }
-}
-exports.default = new GiftProjectController();
+});
+exports.getGiftProjects = getGiftProjects;
+const getGiftProjectById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const project = yield GiftProjectService.getGiftProjectById(req.params.id);
+        if (!project) {
+            return res.status(404).json({ message: 'Project not found' });
+        }
+        res.status(200).json(project);
+    }
+    catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+exports.getGiftProjectById = getGiftProjectById;
+const updateGiftProject = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const project = yield GiftProjectService.updateGiftProject(req.params.id, req.body);
+        if (!project) {
+            return res.status(404).json({ message: 'Project not found' });
+        }
+        res.status(200).json(project);
+    }
+    catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+exports.updateGiftProject = updateGiftProject;
+const deleteGiftProject = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const project = yield GiftProjectService.deleteGiftProject(req.params.id);
+        if (!project) {
+            return res.status(404).json({ message: 'Project not found' });
+        }
+        res.status(200).json({ message: 'Project deleted successfully' });
+    }
+    catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+exports.deleteGiftProject = deleteGiftProject;
 //# sourceMappingURL=GiftProjectController.js.map

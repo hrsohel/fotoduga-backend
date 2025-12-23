@@ -6,7 +6,7 @@ const PhotoAlbumPageSchema = new mongoose_1.Schema({
     template: { type: String, required: true },
 });
 const PhotoAlbumTemplateSchema = new mongoose_1.Schema({
-    name: { type: String, required: true, unique: true },
+    name: { type: String, required: true },
     category: { type: String },
     pageType: { type: String },
     pages: [{ type: mongoose_1.Schema.Types.ObjectId, ref: "PhotoAlbumState" }],

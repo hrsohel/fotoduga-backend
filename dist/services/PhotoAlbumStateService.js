@@ -12,26 +12,27 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.deletePhotoAlbumState = exports.updatePhotoAlbumState = exports.getPhotoAlbumStateById = exports.getPhotoAlbumStates = exports.createPhotoAlbumState = void 0;
 const PhotoAlbumState_1 = __importDefault(require("../models/PhotoAlbumState"));
-class PhotoAlbumStateService {
-    createState(stateData, files) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (files && files.length > 0) {
-                let fileIndex = 0;
-                if (stateData.placedImages) {
-                    for (let i = 0; i < stateData.placedImages.length; i++) {
-                        if (fileIndex < files.length) {
-                            stateData.placedImages[i].src = files[fileIndex].path;
-                            fileIndex++;
-                        }
-                    }
-                }
-            }
-            const newState = new PhotoAlbumState_1.default(stateData);
-            yield newState.save();
-            return newState;
-        });
-    }
-}
-exports.default = new PhotoAlbumStateService();
+const createPhotoAlbumState = (data) => __awaiter(void 0, void 0, void 0, function* () {
+    const newState = new PhotoAlbumState_1.default(data);
+    return yield newState.save();
+});
+exports.createPhotoAlbumState = createPhotoAlbumState;
+const getPhotoAlbumStates = () => __awaiter(void 0, void 0, void 0, function* () {
+    return yield PhotoAlbumState_1.default.find();
+});
+exports.getPhotoAlbumStates = getPhotoAlbumStates;
+const getPhotoAlbumStateById = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    return yield PhotoAlbumState_1.default.findById(id);
+});
+exports.getPhotoAlbumStateById = getPhotoAlbumStateById;
+const updatePhotoAlbumState = (id, data) => __awaiter(void 0, void 0, void 0, function* () {
+    return yield PhotoAlbumState_1.default.findByIdAndUpdate(id, data, { new: true });
+});
+exports.updatePhotoAlbumState = updatePhotoAlbumState;
+const deletePhotoAlbumState = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    return yield PhotoAlbumState_1.default.findByIdAndDelete(id);
+});
+exports.deletePhotoAlbumState = deletePhotoAlbumState;
 //# sourceMappingURL=PhotoAlbumStateService.js.map

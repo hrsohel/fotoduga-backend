@@ -1,4 +1,37 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -8,105 +41,66 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const UserImagesService_1 = __importDefault(require("../services/UserImagesService"));
+exports.getImagesByUser = exports.deleteImage = exports.uploadImages = void 0;
+const UserImagesService = __importStar(require("../services/UserImagesService"));
 const mongoose_1 = require("mongoose");
-class UserImagesController {
-    uploadImages(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const { userId } = req.params;
-                const files = req.files;
-                const imagePaths = files.map(file => file.path.replace(/\\/g, '/'));
-                const updatedUserImages = yield UserImagesService_1.default.uploadImages(new mongoose_1.Types.ObjectId(userId), imagePaths);
-                res.status(200).json({
-                    code: 200,
-                    message: 'Images uploaded successfully',
-                    success: true,
-                    data: updatedUserImages,
-                });
-            }
-            catch (error) {
-                res.status(500).json({
-                    code: 500,
-                    message: 'Error uploading images',
-                    success: false,
-                    data: [],
-                });
-            }
-        });
+const uploadImages = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    try {
+        const userId = ((_a = req.user) === null || _a === void 0 ? void 0 : _a.id) || "60d5ec49f8c7d00015f8e3b1";
+        if (!userId) {
+            return res.status(401).json({ message: 'Not authenticated' });
+        }
+        const files = req.files;
+        const imagePaths = files.map(file => file.path.replace(/\\/g, '/'));
+        const updatedUserImages = yield UserImagesService.uploadImages(new mongoose_1.Types.ObjectId(userId), imagePaths);
+        res.status(200).json(updatedUserImages);
     }
-    deleteImage(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const { userId } = req.params;
-                const { imageUrl } = req.body;
-                const updatedUserImages = yield UserImagesService_1.default.deleteImage(new mongoose_1.Types.ObjectId(userId), imageUrl);
-                if (updatedUserImages) {
-                    res.status(200).json({
-                        code: 200,
-                        message: 'Image deleted successfully',
-                        success: true,
-                        data: updatedUserImages,
-                    });
-                }
-                else {
-                    res.status(404).json({
-                        code: 404,
-                        message: 'User not found',
-                        success: false,
-                        data: [],
-                    });
-                }
-            }
-            catch (error) {
-                console.error(error);
-                res.status(500).json({
-                    code: 500,
-                    message: 'Error deleting image',
-                    success: false,
-                    data: [],
-                });
-            }
-        });
+    catch (error) {
+        res.status(500).json({ message: error.message });
     }
-    getImagesByUser(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                console.log("user images");
-                const { userId } = req.params;
-                console.log(userId);
-                const images = yield UserImagesService_1.default.getImagesByUser(new mongoose_1.Types.ObjectId(userId));
-                if (images) {
-                    res.status(200).json({
-                        code: 200,
-                        message: 'Images retrieved successfully',
-                        success: true,
-                        data: images,
-                    });
-                }
-                else {
-                    res.status(404).json({
-                        code: 404,
-                        message: 'User not found',
-                        success: false,
-                        data: [],
-                    });
-                }
-            }
-            catch (error) {
-                res.status(500).json({
-                    code: 500,
-                    message: 'Error retrieving images',
-                    success: false,
-                    data: [],
-                });
-            }
-        });
+});
+exports.uploadImages = uploadImages;
+const deleteImage = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    try {
+        const userId = ((_a = req.user) === null || _a === void 0 ? void 0 : _a.id) || "60d5ec49f8c7d00015f8e3b1";
+        if (!userId) {
+            return res.status(401).json({ message: 'Not authenticated' });
+        }
+        const { imageUrl } = req.body;
+        const updatedUserImages = yield UserImagesService.deleteImage(new mongoose_1.Types.ObjectId(userId), imageUrl);
+        if (updatedUserImages) {
+            res.status(200).json(updatedUserImages);
+        }
+        else {
+            res.status(404).json({ message: 'User not found' });
+        }
     }
-}
-exports.default = new UserImagesController();
+    catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+exports.deleteImage = deleteImage;
+const getImagesByUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    try {
+        const userId = ((_a = req.user) === null || _a === void 0 ? void 0 : _a.id) || "60d5ec49f8c7d00015f8e3b1";
+        if (!userId) {
+            return res.status(401).json({ message: 'Not authenticated' });
+        }
+        const images = yield UserImagesService.getImagesByUser(new mongoose_1.Types.ObjectId(userId));
+        if (images) {
+            res.status(200).json(images);
+        }
+        else {
+            res.status(404).json({ message: 'User not found or no images' });
+        }
+    }
+    catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+exports.getImagesByUser = getImagesByUser;
 //# sourceMappingURL=UserImagesController.js.map

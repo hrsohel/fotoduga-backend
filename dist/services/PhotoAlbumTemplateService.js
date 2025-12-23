@@ -36,9 +36,15 @@ class PhotoAlbumTemplateService {
                             }
                         }
                     }
-                    const newPage = new PhotoAlbumState_1.default(pageData);
-                    yield newPage.save();
-                    newPageIds.push(newPage._id);
+                    let savedPage;
+                    if (pageData.projectId) {
+                        savedPage = yield PhotoAlbumState_1.default.findOneAndUpdate({ projectId: pageData.projectId }, pageData, { new: true, upsert: true });
+                    }
+                    else {
+                        const newPage = new PhotoAlbumState_1.default(pageData);
+                        savedPage = yield newPage.save();
+                    }
+                    newPageIds.push(savedPage._id);
                 }
             }
             const update = {};

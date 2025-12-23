@@ -29,6 +29,7 @@ class App {
                         'http://localhost:3000',
                         'http://localhost:5173',
                         'http://127.0.0.1:5173',
+                        'http://localhost:5174',
                         'https://trader-ada-refused-seem.trycloudflare.com', // your tunnel
                         // add your real domain later
                     ];

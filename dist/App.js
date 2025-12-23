@@ -9,6 +9,7 @@ const CalendarProjectRoutes_1 = __importDefault(require("./routes/CalendarProjec
 const GiftProjectRoutes_1 = __importDefault(require("./routes/GiftProjectRoutes"));
 const PhotoAlbumStateRoutes_1 = __importDefault(require("./routes/PhotoAlbumStateRoutes"));
 const UserImagesRoutes_1 = __importDefault(require("./routes/UserImagesRoutes"));
+const UserRoutes_1 = __importDefault(require("./routes/UserRoutes"));
 const cors_1 = __importDefault(require("cors"));
 class App {
     constructor() {
@@ -27,6 +28,7 @@ class App {
                     'http://localhost:3000',
                     'http://localhost:5173',
                     'http://127.0.0.1:5173',
+                    'http://localhost:5174',
                     'https://trader-ada-refused-seem.trycloudflare.com', // your tunnel
                     // add your real domain later
                 ];
@@ -51,9 +53,10 @@ class App {
         });
         this.app.use('/api', UserImagesRoutes_1.default);
         this.app.use('/api', PhotoAlbumTemplateRoutes_1.default);
-        this.app.use('/api/calendars', CalendarProjectRoutes_1.default);
-        this.app.use('/api/gifts', GiftProjectRoutes_1.default);
-        this.app.use('/api/photo-album', PhotoAlbumStateRoutes_1.default);
+        this.app.use('/api', CalendarProjectRoutes_1.default);
+        this.app.use('/api', GiftProjectRoutes_1.default);
+        this.app.use('/api', PhotoAlbumStateRoutes_1.default);
+        this.app.use('/api/users', UserRoutes_1.default);
     }
 }
 exports.default = new App().app;

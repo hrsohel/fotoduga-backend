@@ -42,7 +42,8 @@ class PhotoAlbumTemplateController {
                 const { templateName } = req.params;
                 const { pagesToAdd, pagesToDelete } = req.body;
                 const files = req.files;
-                const updatedTemplate = yield PhotoAlbumTemplateService_1.default.updatePagesInTemplate(templateName, pagesToAdd, files, pagesToDelete);
+                const parsedPagesToAdd = JSON.parse(pagesToAdd);
+                const updatedTemplate = yield PhotoAlbumTemplateService_1.default.updatePagesInTemplate(templateName, parsedPagesToAdd, files, pagesToDelete);
                 if (updatedTemplate) {
                     res.status(200).json({
                         code: 200,
@@ -61,6 +62,7 @@ class PhotoAlbumTemplateController {
                 }
             }
             catch (error) {
+                console.error(error);
                 res.status(500).json({
                     code: 500,
                     message: 'Error updating pages in template',
@@ -73,6 +75,7 @@ class PhotoAlbumTemplateController {
     getTemplatePages(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
+                console.log("hey");
                 const { templateName } = req.params;
                 const template = yield PhotoAlbumTemplateService_1.default.getTemplatePages(templateName);
                 if (template) {
@@ -93,6 +96,7 @@ class PhotoAlbumTemplateController {
                 }
             }
             catch (error) {
+                console.error(error);
                 res.status(500).json({
                     code: 500,
                     message: 'Error retrieving template pages',

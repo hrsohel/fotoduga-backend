@@ -12,55 +12,27 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.deleteCalendarProject = exports.updateCalendarProject = exports.getCalendarProjectById = exports.getCalendarProjects = exports.createCalendarProject = void 0;
 const CalendarProject_1 = __importDefault(require("../models/CalendarProject"));
-class CalendarProjectService {
-    createProject(userId, projectName, year, name, calendarType) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const initialPages = Array.from({ length: 12 }, (_, i) => ({
-                monthIndex: i,
-                bgType: 'plain',
-                selectedBg: '#FFFFFF',
-                layout: [],
-                stickers: [],
-                texts: [],
-            }));
-            const newProject = new CalendarProject_1.default({
-                userId,
-                projectName,
-                year,
-                name,
-                calendarType,
-                pages: initialPages,
-            });
-            yield newProject.save();
-            return newProject;
-        });
-    }
-    addOrUpdatePage(projectId, page) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const project = yield CalendarProject_1.default.findById(projectId);
-            if (!project) {
-                return null;
-            }
-            const pageIndex = project.pages.findIndex(p => p.monthIndex === page.monthIndex);
-            if (pageIndex > -1) {
-                // Update existing page
-                project.pages[pageIndex] = page;
-                yield project.save();
-                return project;
-            }
-            else {
-                // Page not found, and new pages cannot be added
-                return null;
-            }
-        });
-    }
-    getProjectPages(projectId) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const project = yield CalendarProject_1.default.findById(projectId);
-            return project ? project.pages : null;
-        });
-    }
-}
-exports.default = new CalendarProjectService();
+const createCalendarProject = (data) => __awaiter(void 0, void 0, void 0, function* () {
+    const newProject = new CalendarProject_1.default(data);
+    return yield newProject.save();
+});
+exports.createCalendarProject = createCalendarProject;
+const getCalendarProjects = () => __awaiter(void 0, void 0, void 0, function* () {
+    return yield CalendarProject_1.default.find();
+});
+exports.getCalendarProjects = getCalendarProjects;
+const getCalendarProjectById = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    return yield CalendarProject_1.default.findById(id);
+});
+exports.getCalendarProjectById = getCalendarProjectById;
+const updateCalendarProject = (id, data) => __awaiter(void 0, void 0, void 0, function* () {
+    return yield CalendarProject_1.default.findByIdAndUpdate(id, data, { new: true });
+});
+exports.updateCalendarProject = updateCalendarProject;
+const deleteCalendarProject = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    return yield CalendarProject_1.default.findByIdAndDelete(id);
+});
+exports.deleteCalendarProject = deleteCalendarProject;
 //# sourceMappingURL=CalendarProjectService.js.map

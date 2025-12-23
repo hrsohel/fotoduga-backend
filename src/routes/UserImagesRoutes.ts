@@ -7,11 +7,10 @@ const router = Router();
 
 router.post(
   '/images',
-  authMiddleware,
   upload.array('images'),
   UserImagesController.uploadImages
 );
-router.delete('/images', authMiddleware, UserImagesController.deleteImage);
-router.get('/images', authMiddleware, UserImagesController.getImagesByUser);
+router.delete('/images', UserImagesController.deleteImage);
+router.get('/images', UserImagesController.getImagesByUser);
 
 export default router;

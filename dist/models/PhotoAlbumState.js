@@ -80,7 +80,9 @@ const PlacedImageSchema = new mongoose_1.Schema({
     partition: { type: String, enum: ["left", "right", "debug"], required: true },
     gridArea: { type: String },
     mask: { type: String, default: null },
-    frameUrl: { type: String, default: null }
+    frameUrl: { type: String, default: null },
+    texts: [TextSchema],
+    stickers: [StickerSchema]
 }, { _id: false });
 // Schema for the individual grid cells/positions
 const GridPositionSchema = new mongoose_1.Schema({
@@ -108,7 +110,7 @@ const PhotoAlbumStateSchema = new mongoose_1.Schema({
     layoutModelLeft: { type: Number, default: 0 },
     layoutModelRight: { type: Number, default: 0 },
     bgType: { type: String, default: "plain" },
-    selectBg: { type: String, default: "#D81B60" },
+    selectedBg: { type: String, default: "#D81B60" },
     leftBg: { type: String, default: null },
     rightBg: { type: String, default: null },
     leftBgType: { type: String, default: "plain" },

@@ -32,16 +32,16 @@ var __importStar = (this && this.__importStar) || (function () {
         return result;
     };
 })();
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const UserImagesController = __importStar(require("../controllers/UserImagesController"));
-const upload_1 = __importDefault(require("../middleware/upload"));
+const UserController = __importStar(require("../controllers/UserController"));
+const auth_1 = require("../middleware/auth");
 const router = (0, express_1.Router)();
-router.post('/images', upload_1.default.array('images'), UserImagesController.uploadImages);
-router.delete('/images', UserImagesController.deleteImage);
-router.get('/images', UserImagesController.getImagesByUser);
+router.post('/register', UserController.register);
+router.post('/login', UserController.login);
+router.post('/logout', UserController.logout);
+router.get('/profile', auth_1.authMiddleware, UserController.getProfile);
+router.put('/profile', auth_1.authMiddleware, UserController.updateUser);
+router.delete('/profile', auth_1.authMiddleware, UserController.deleteUser);
 exports.default = router;
-//# sourceMappingURL=UserImagesRoutes.js.map
+//# sourceMappingURL=UserRoutes.js.map

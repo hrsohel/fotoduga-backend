@@ -42,65 +42,90 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getImagesByUser = exports.deleteImage = exports.uploadImages = void 0;
-const UserImagesService = __importStar(require("../services/UserImagesService"));
-const mongoose_1 = require("mongoose");
-const uploadImages = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
+exports.logout = exports.deleteUser = exports.updateUser = exports.getProfile = exports.login = exports.register = void 0;
+const UserService = __importStar(require("../services/UserService"));
+const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const userId = ((_a = req.user) === null || _a === void 0 ? void 0 : _a.id) || "60d5ec49f8c7d00015f8e3b1";
-        if (!userId) {
-            return res.status(401).json({ message: 'Not authenticated' });
-        }
-        const files = req.files;
-        const imagePaths = files.map(file => file.path.replace(/\\/g, '/'));
-        const updatedUserImages = yield UserImagesService.uploadImages(new mongoose_1.Types.ObjectId(userId), imagePaths);
-        res.status(200).json(updatedUserImages);
+        const { user, token } = yield UserService.registerUser(req.body);
+        res.status(201).json({ user, token });
     }
     catch (error) {
         res.status(500).json({ message: error.message });
     }
 });
-exports.uploadImages = uploadImages;
-const deleteImage = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
+exports.register = register;
+const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const userId = ((_a = req.user) === null || _a === void 0 ? void 0 : _a.id) || "60d5ec49f8c7d00015f8e3b1";
-        if (!userId) {
-            return res.status(401).json({ message: 'Not authenticated' });
+        const { email, password } = req.body;
+        const result = yield UserService.loginUser(email, password);
+        if (!result) {
+            return res.status(401).json({ message: 'Invalid credentials' });
         }
-        const { imageUrl } = req.body;
-        const updatedUserImages = yield UserImagesService.deleteImage(new mongoose_1.Types.ObjectId(userId), imageUrl);
-        if (updatedUserImages) {
-            res.status(200).json(updatedUserImages);
-        }
-        else {
-            res.status(404).json({ message: 'User not found' });
-        }
+        res.status(200).json(result);
     }
     catch (error) {
         res.status(500).json({ message: error.message });
     }
 });
-exports.deleteImage = deleteImage;
-const getImagesByUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.login = login;
+const getProfile = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {
-        const userId = ((_a = req.user) === null || _a === void 0 ? void 0 : _a.id) || "60d5ec49f8c7d00015f8e3b1";
+        // Assuming user id is available in req.user from an auth middleware
+        const userId = (_a = req.user) === null || _a === void 0 ? void 0 : _a.id;
         if (!userId) {
             return res.status(401).json({ message: 'Not authenticated' });
         }
-        const images = yield UserImagesService.getImagesByUser(new mongoose_1.Types.ObjectId(userId));
-        if (images) {
-            res.status(200).json(images);
+        const user = yield UserService.getUserById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
         }
-        else {
-            res.status(404).json({ message: 'User not found or no images' });
-        }
+        res.status(200).json(user);
     }
     catch (error) {
         res.status(500).json({ message: error.message });
     }
 });
-exports.getImagesByUser = getImagesByUser;
-//# sourceMappingURL=UserImagesController.js.map
+exports.getProfile = getProfile;
+const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    try {
+        const userId = (_a = req.user) === null || _a === void 0 ? void 0 : _a.id;
+        if (!userId) {
+            return res.status(401).json({ message: 'Not authenticated' });
+        }
+        const user = yield UserService.updateUser(userId, req.body);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        res.status(200).json(user);
+    }
+    catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+exports.updateUser = updateUser;
+const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    try {
+        const userId = (_a = req.user) === null || _a === void 0 ? void 0 : _a.id;
+        if (!userId) {
+            return res.status(401).json({ message: 'Not authenticated' });
+        }
+        const user = yield UserService.deleteUser(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        res.status(200).json({ message: 'User deleted successfully' });
+    }
+    catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+exports.deleteUser = deleteUser;
+// A simple logout. On the client side, the token should be deleted.
+const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    res.status(200).json({ message: 'Logged out successfully' });
+});
+exports.logout = logout;
+//# sourceMappingURL=UserController.js.map
